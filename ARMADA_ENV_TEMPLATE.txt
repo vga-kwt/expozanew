@@ -1,0 +1,16 @@
+# ============================================
+# ARMADA API CONFIGURATION
+# Add these lines to your .env file
+# ============================================
+
+ARMADA_ENABLED=true
+ARMADA_BASE_URL=https://api.armadadelivery.com
+ARMADA_MAIN_API_KEY=main_52e1cc75e683fb92b8fe472mi11h723
+ARMADA_API_KEY=d9049c2d-37af-4812-a658-34a997736b56
+ARMADA_BRANCH_ID=NAQSH
+ARMADA_WEBHOOK_KEY=vE6gH8Rt2L1sK9w
+ARMADA_WEBHOOK_URL=https://webhook.site/378d8934-0de5-48cd-9ed4-aeda171faabc
+ARMADA_TIMEOUT=30
+ARMADA_DEFAULT_CURRENCY=KWD
+ARMADA_DEFAULT_COUNTRY=KW
+

@@ -1,0 +1,1 @@
+import{r,j as s}from"./app-CBPioDtJ.js";import{R as l}from"./index-BHE3PTs0.js";/* empty css                   */const p=r.forwardRef((t,a)=>{const e=r.useRef(null);return r.useImperativeHandle(a,()=>e.current),s.jsx(l,{ref:e,...t})});p.displayName="ReactQuillWrapper";export{p as R};

@@ -1,0 +1,1 @@
+import{j as e}from"./app-CBPioDtJ.js";import{B as n}from"./createLucideIcon-fyhVUKGQ.js";const a=({disabled:t,btnTitle:s,onClick:r,variant:o})=>e.jsx(n,{size:"sm",variant:o,onClick:r,disabled:t,children:s}),c=({btnTitle:t,onClick:s})=>e.jsx(n,{size:"sm",variant:"destructive",onClick:s,children:t});export{a as A,c as a};

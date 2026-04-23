@@ -1,0 +1,2 @@
+function o(i){if(!i)return"Not provided";try{const n=typeof i=="string"?JSON.parse(i):i;if(typeof n=="object"&&n!==null){const t=[];n.full_name&&t.push(n.full_name),n.line_1&&t.push(n.line_1),n.line_2&&t.push(n.line_2);const e=[];return n.city&&e.push(n.city),n.state&&e.push(n.state),n.country&&e.push(n.country),e.length>0&&t.push(e.join(", ")),n.pincode&&t.push(n.pincode),n.phone&&t.push(`Phone: ${n.phone}`),t.join(`
+`)}}catch{}return i}export{o as f};
