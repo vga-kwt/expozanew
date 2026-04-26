@@ -1354,7 +1354,7 @@ function OrdersPage() {
                             <tr key={order.id}>
                                 <td className="border px-4 py-2 text-center">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
                                 <td className="border px-4 py-2 text-center">{order.order_code}</td>
-                                <td className="border px-4 py-2 text-center">{order.user.full_name}</td>
+                                <td className="border px-4 py-2 text-center">{order.user?.full_name ?? 'N/A'}</td>
                                 <td className="border px-4 py-2 text-center">
                                     {(() => {
                                         // Priority 1: Check order.vendor directly
