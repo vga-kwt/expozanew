@@ -286,7 +286,13 @@ class ProductService
         $disk = config('filesystems.default', 'public');
 
         // Only add main image if it exists
-        if ($product->image_url && Storage::disk($disk)->exists($product->image_url)) {
+        try {
+            $mainImageExists = $product->image_url && Storage::disk($disk)->exists($product->image_url);
+        } catch (\Throwable $e) {
+            $mainImageExists = (bool) $product->image_url;
+        }
+
+        if ($mainImageExists) {
             $mainImageUrl = $this->imageService->getImageUrl($product->image_url);
             if ($mainImageUrl) {
                 $images[] = [

@@ -104,8 +104,13 @@ class MultipleImageService
         $disk = config('filesystems.default', 'public');
 
         foreach ($gallery as $imagePath) {
-            // Only add images that actually exist
-            if (\Illuminate\Support\Facades\Storage::disk($disk)->exists($imagePath)) {
+            try {
+                $exists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($imagePath);
+            } catch (\Throwable $e) {
+                $exists = true;
+            }
+
+            if ($exists) {
                 $url = $this->imageService->getImageUrl($imagePath);
                 if ($url) {
                     $urls[] = [
@@ -163,7 +168,12 @@ class MultipleImageService
         $disk = config('filesystems.default', 's3');
 
         foreach ($gallery as $imagePath) {
-            if (\Illuminate\Support\Facades\Storage::disk($disk)->exists($imagePath)) {
+            try {
+                $exists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($imagePath);
+            } catch (\Throwable $e) {
+                $exists = false;
+            }
+            if ($exists) {
                 $totalSize += \Illuminate\Support\Facades\Storage::disk($disk)->size($imagePath);
             }
         }

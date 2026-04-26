@@ -46,10 +46,16 @@ class ImageService
         $disk = config('filesystems.default', 's3');
         
         // Use Storage facade for both S3 and local
-        if (Storage::disk($disk)->exists($imagePath)) {
+        try {
+            $exists = Storage::disk($disk)->exists($imagePath);
+        } catch (\Throwable $e) {
+            $exists = false;
+        }
+
+        if ($exists) {
             return Storage::disk($disk)->delete($imagePath);
         }
-        
+
         return false;
     }
 
