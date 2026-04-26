@@ -197,7 +197,12 @@ class VendorProfileController extends Controller
         $disk = config('filesystems.default', 's3');
 
         // Delete old logo if exists
-        if ($vendor->logo && Storage::disk($disk)->exists($vendor->logo)) {
+        try {
+            $logoExists = $vendor->logo && Storage::disk($disk)->exists($vendor->logo);
+        } catch (\Throwable $e) {
+            $logoExists = false;
+        }
+        if ($logoExists) {
             Storage::disk($disk)->delete($vendor->logo);
         }
 
@@ -298,7 +303,12 @@ class VendorProfileController extends Controller
         $disk = config('filesystems.default', 's3');
 
         // Delete vendor logo if exists
-        if ($vendor->logo && Storage::disk($disk)->exists($vendor->logo)) {
+        try {
+            $logoExists = $vendor->logo && Storage::disk($disk)->exists($vendor->logo);
+        } catch (\Throwable $e) {
+            $logoExists = false;
+        }
+        if ($logoExists) {
             Storage::disk($disk)->delete($vendor->logo);
         }
 
