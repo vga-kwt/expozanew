@@ -510,13 +510,13 @@ function OrderDetailsModal({ order, isOpen, onClose }: { order: Order | null; is
                                 </CardHeader>
                                 <CardContent className="space-y-2 p-4">
                                     <div>
-                                        <strong>Name:</strong> {order.user.full_name}
+                                        <strong>Name:</strong> {order.user?.full_name ?? 'N/A'}
                                     </div>
                                     <div>
-                                        <strong>Email:</strong> {order.user.email}
+                                        <strong>Email:</strong> {order.user?.email ?? 'N/A'}
                                     </div>
                                     <div>
-                                        <strong>Mobile:</strong> {order.user.mobile || order.user.phone || 'Not provided'}
+                                        <strong>Mobile:</strong> {order.user?.mobile || order.user?.phone || 'Not provided'}
                                     </div>
                                     <div>
                                         <strong>Address:</strong> {formatAddress(order.shipping_address)}
