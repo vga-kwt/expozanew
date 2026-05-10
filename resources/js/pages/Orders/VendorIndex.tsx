@@ -15,7 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, router, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
 import { throttle } from 'lodash';
-import { AlertTriangle, CheckCircle, Clock, Package, Truck } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, ExternalLink, Package, QrCode, Truck } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ExportButton from '@/components/export-button';
 import * as RadixCheckbox from '@radix-ui/react-checkbox';
@@ -455,6 +455,48 @@ function OrderDetailsModal({ order, isOpen, onClose }: { order: Order | null; is
                                         </div>
                                     </CardContent>
                                 </Card>
+
+                                {(() => {
+                                    const armada = order.armada_response as any;
+                                    const trackingLink = armada?.trackingLink || armada?.tracking_link;
+                                    if (!trackingLink) return null;
+                                    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=${encodeURIComponent(trackingLink)}`;
+                                    return (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle className="flex items-center gap-2">
+                                                    <QrCode className="h-5 w-5" />
+                                                    Delivery QR Code
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-3 p-4">
+                                                <div className="flex justify-center">
+                                                    <div className="rounded-lg border bg-white p-4">
+                                                        <img
+                                                            src={qrSrc}
+                                                            alt="Delivery tracking QR code"
+                                                            className="h-48 w-48"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <p className="text-center text-sm text-muted-foreground">
+                                                    Scan with your phone to open the live delivery tracking page.
+                                                </p>
+                                                <div className="flex items-center justify-center gap-2 text-sm">
+                                                    <ExternalLink className="h-4 w-4 text-blue-600" />
+                                                    <a
+                                                        href={trackingLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="break-all text-blue-600 underline hover:text-blue-800"
+                                                    >
+                                                        {trackingLink}
+                                                    </a>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })()}
 
                                 <Card>
                                     <CardHeader>
