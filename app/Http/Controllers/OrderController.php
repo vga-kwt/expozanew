@@ -1690,6 +1690,51 @@ class OrderController extends Controller
     }
 
     /**
+     * Public order info page (for QR code scanning)
+     */
+    public function publicInfo($orderId)
+    {
+        $order = Order::with(['user', 'orderItems.product', 'vendor'])->findOrFail($orderId);
+
+        return Inertia::render('Orders/PublicInfo', [
+            'order' => [
+                'id' => $order->id,
+                'order_code' => $order->order_code,
+                'order_status' => $order->order_status,
+                'delivery_status' => $order->delivery_status,
+                'payment_status' => $order->payment_status,
+                'payment_method' => $order->payment_method,
+                'total_amount' => $order->total_amount,
+                'shipping_address' => $order->shipping_address,
+                'created_at' => $order->created_at,
+                'customer' => [
+                    'name' => $order->user->full_name ?? 'N/A',
+                    'email' => $order->user->email ?? 'N/A',
+                    'mobile' => $order->user->mobile ?? $order->user->phone ?? 'N/A',
+                ],
+                'vendor' => [
+                    'name' => $order->vendor->name ?? 'N/A',
+                    'email' => $order->vendor->email ?? 'N/A',
+                    'mobile' => $order->vendor->mobile ?? 'N/A',
+                ],
+                'armada' => $order->armada_response ? [
+                    'tracking_number' => $order->armada_tracking_number,
+                    'tracking_link' => $order->armada_response['trackingLink'] ?? null,
+                    'order_status' => $order->armada_response['orderStatus'] ?? null,
+                    'customer_address' => $order->armada_response['customerAddress'] ?? null,
+                    'delivery_fee' => $order->armada_response['deliveryFee'] ?? null,
+                    'driver' => $order->armada_response['driver'] ?? null,
+                ] : null,
+                'items' => $order->orderItems->map(fn($item) => [
+                    'name' => $item->product->name_en ?? 'N/A',
+                    'quantity' => $item->quantity,
+                    'amount' => $item->amount,
+                ]),
+            ],
+        ]);
+    }
+
+    /**
      * Soft delete an order
      */
     public function destroy($id)

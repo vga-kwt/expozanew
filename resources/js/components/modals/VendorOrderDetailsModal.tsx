@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Head, router } from '@inertiajs/react';
 import dayjs from 'dayjs';
+import { QRCodeSVG } from 'qrcode.react';
 import { AlertTriangle, CheckCircle, Clock, Package, Truck } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -116,6 +117,10 @@ interface Order {
     order_items?: OrderItem[];
     is_refundable?: boolean;
     shipping_fee?: number;
+    armada_response?: any;
+    armada_tracking_number?: string;
+    armada_order_id?: string;
+    is_armada_synced?: boolean;
 }
 interface VendorOrderDetailsModalProps {
     isOpen: boolean;
@@ -568,59 +573,56 @@ const VendorOrderDetailsModal: React.FC<VendorOrderDetailsModalProps> = ({ isOpe
                                         Delivery Tracking
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-4">
-                                    {fetchingTracking ? (
-                                        <p className="py-8 text-center">Loading tracking data...</p>
-                                    ) : trackingData?.tracking_number ? (
-                                        <div className="space-y-4">
-                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                                <div>
-                                                    <strong>Tracking Number:</strong> {trackingData.tracking_number}
-                                                </div>
-                                                <div>
-                                                    <strong>Carrier:</strong> {trackingData?.carrier || 'Unknown'}
-                                                </div>
-                                                <div>
-                                                    <strong>Status:</strong>
-                                                    <span className="ml-2 inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
-                                                        {trackingData?.status
-                                                            ? trackingData.status.charAt(0).toUpperCase() + trackingData.status.slice(1)
-                                                            : 'Unknown'}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <strong>Estimated Delivery:</strong> {trackingData?.estimated_delivery || 'Not available'}
-                                                </div>
-                                            </div>
-
-                                            {trackingData?.events && (
-                                                <div>
-                                                    <h4 className="mb-3 font-semibold">Tracking Events</h4>
-                                                    <div className="space-y-3">
-                                                        {trackingData.events.map((event, index) => (
-                                                            <div key={index} className="flex items-start space-x-3 rounded border p-3">
-                                                                <div className="mt-2 h-2 w-2 rounded-full bg-blue-500"></div>
-                                                                <div className="flex-1">
-                                                                    <div className="font-medium">{event.status}</div>
-                                                                    <div className="text-sm text-gray-500">{event.location}</div>
-                                                                    <div className="text-sm text-gray-600">{event.description}</div>
-                                                                    <div className="mt-1 text-xs text-gray-400">
-                                                                        {new Date(event.timestamp).toLocaleString()}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            <Button onClick={fetchTrackingData} disabled={fetchingTracking} className="w-full">
-                                                {fetchingTracking ? 'Refreshing...' : 'Refresh Tracking'}
-                                            </Button>
+                                <CardContent className="p-4 space-y-4">
+                                    {/* Tracking number + carrier */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <strong>Tracking Number:</strong>
+                                            <Input value={order?.armada_tracking_number || trackingData?.tracking_number || ''} readOnly className="bg-[#171717] mt-1" />
                                         </div>
-                                    ) : (
-                                        <p className="text-gray-500">No tracking information available for this order?.</p>
+                                        <div>
+                                            <strong>Carrier:</strong>
+                                            <Input value={order?.vendor?.use_armada_delivery ? 'Armada' : (trackingData?.carrier || '')} readOnly className="bg-[#171717] mt-1" />
+                                        </div>
+                                    </div>
+
+                                    {/* Armada tracking link */}
+                                    {((order?.armada_response as any)?.trackingLink || order?.armada_tracking_number) && (
+                                        <div>
+                                            <h3 className="text-lg font-semibold mb-2">Delivery Tracking</h3>
+                                            <a
+                                                href={(order?.armada_response as any)?.trackingLink || `https://tracking.armadadelivery.com/${order?.armada_tracking_number}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                                            >
+                                                {(order?.armada_response as any)?.trackingLink || `https://tracking.armadadelivery.com/${order?.armada_tracking_number}`}
+                                            </a>
+                                        </div>
                                     )}
+
+                                    {/* Armada QR Code */}
+                                    {(order?.armada_response as any)?.qrCodeLink && (
+                                        <div className="flex flex-col items-center">
+                                            <h3 className="text-lg font-semibold mb-2">Armada Delivery QR</h3>
+                                            <img
+                                                src={(order?.armada_response as any).qrCodeLink}
+                                                alt="Armada QR"
+                                                className="w-40 h-40 border rounded p-2 bg-white"
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Customer Info QR */}
+                                    <div className="flex flex-col items-center">
+                                        <h3 className="text-lg font-semibold mb-2">Customer Info QR</h3>
+                                        <QRCodeSVG
+                                            value={`${window.location.origin}/order-info/${order?.id}`}
+                                            size={160}
+                                            className="border rounded p-2 bg-white"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-2">Scan to view full order & customer details</p>
+                                    </div>
                                 </CardContent>
                             </Card>
                         </TabsContent>

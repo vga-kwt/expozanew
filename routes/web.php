@@ -230,6 +230,9 @@ Route::middleware(['auth', 'vendor'])->group(function () {
 // Public CMS Page View Route
 Route::get('/cms/{slug}', [CmsPageController::class, 'showBySlug'])->name('cms.show');
 
+Route::get('/order-info/{orderId}', [\App\Http\Controllers\OrderController::class, 'publicInfo'])->name('order.public-info');
+
+
 // Public Support Page
 Route::get('/support', [SupportController::class, 'index'])->name('support');
 Route::post('/support', [SupportController::class, 'store'])->name('support.store');

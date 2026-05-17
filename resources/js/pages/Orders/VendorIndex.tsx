@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast';
 import AppLayout from '@/layouts/app-layout';
 import { Head, router, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
+import { QRCodeSVG } from 'qrcode.react';
 import { throttle } from 'lodash';
 import { AlertTriangle, CheckCircle, Clock, ExternalLink, Package, QrCode, Truck } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -796,6 +797,16 @@ function OrderDetailsModal({ order, isOpen, onClose }: { order: Order | null; is
                                                                 Tracking link will be available once the order is synced with Armada.
                                                             </div>
                                                         )}
+                                                    </div>
+                                                    {/* Customer Info QR */}
+                                                    <div className="mt-4 flex flex-col items-center">
+                                                        <h3 className="text-lg font-semibold mb-2">Customer Info QR</h3>
+                                                        <QRCodeSVG
+                                                            value={`${window.location.origin}/order-info/${order?.id}`}
+                                                            size={160}
+                                                            className="border rounded p-2 bg-white"
+                                                        />
+                                                        <p className="text-xs text-gray-500 mt-2">Scan to view full order & customer details</p>
                                                     </div>
                                                 </div>
                                             );
