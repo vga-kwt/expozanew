@@ -601,18 +601,6 @@ const VendorOrderDetailsModal: React.FC<VendorOrderDetailsModalProps> = ({ isOpe
                                         </div>
                                     )}
 
-                                    {/* Armada QR Code */}
-                                    {(order?.armada_response as any)?.qrCodeLink && (
-                                        <div className="flex flex-col items-center">
-                                            <h3 className="text-lg font-semibold mb-2">Armada Delivery QR</h3>
-                                            <img
-                                                src={(order?.armada_response as any).qrCodeLink}
-                                                alt="Armada QR"
-                                                className="w-40 h-40 border rounded p-2 bg-white"
-                                            />
-                                        </div>
-                                    )}
-
                                     {/* Customer Info QR */}
                                     <div className="flex flex-col items-center">
                                         <h3 className="text-lg font-semibold mb-2">Customer Info QR</h3>
