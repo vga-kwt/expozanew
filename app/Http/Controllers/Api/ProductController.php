@@ -422,13 +422,24 @@ class ProductController extends Controller
     {
         $perPage = $request->input('per_page', 12);
 
-        $expoVendor = ExpoVendor::where('expo_id', $expoId)->where('vendor_id', $vendorId)->where('deleted_at', null)->first();
-        if (!$expoVendor) {
-            return $this->forbiddenResponse('User is not a vendor');
+        // expoId = 0 means "no specific expo" (e.g., guest browsing all vendor products).
+        // Skip the expo-vendor mapping check in that case.
+        if ((int) $expoId !== 0) {
+            $expoVendor = ExpoVendor::where('expo_id', $expoId)
+                ->where('vendor_id', $vendorId)
+                ->whereNull('deleted_at')
+                ->first();
+            if (!$expoVendor) {
+                return $this->forbiddenResponse('Vendor is not registered for this expo');
+            }
         }
+
         $query = ExpoProduct::with(['product', 'product.category', 'product.vendor'])
-        ->where('expo_products.vendor_id', $vendorId)
-        ->where('expo_products.expo_id', $expoId);
+            ->where('expo_products.vendor_id', $vendorId);
+
+        if ((int) $expoId !== 0) {
+            $query->where('expo_products.expo_id', $expoId);
+        }
 
             if ($request->filled('category_id')) {
                 $query->whereHas('product', function ($q) use ($request) {
