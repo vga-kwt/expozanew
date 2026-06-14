@@ -77,7 +77,7 @@ class VendorController extends Controller
             'address' => $vendor->address,
             'description' => $vendor->description,
             'description_ar' => $vendor->description_ar,
-            'logo' => $vendor->logo ? asset('storage/' . $vendor->logo) : null,
+            'logo' => $vendor->logo_url,
             'website' => $vendor->website,
             'social_media' => $vendor->social_media,
             'status' => $vendor->status,

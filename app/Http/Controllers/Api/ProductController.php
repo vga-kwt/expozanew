@@ -626,7 +626,7 @@ class ProductController extends Controller
                 'id' => $product->vendor->id,
                 'company_name' => $product->vendor->company_name,
                 'name' => $product->vendor->name,
-                'logo' => $product->vendor->logo ? asset('storage/' . $product->vendor->logo) : null,
+                'logo' => $product->vendor->logo_url,
                 'user' => [
                     'id' => $product->vendor->user->id,
                     'name' => $product->vendor->user->name,
