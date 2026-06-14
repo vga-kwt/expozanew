@@ -435,7 +435,8 @@ class ProductController extends Controller
         }
 
         $query = ExpoProduct::with(['product', 'product.category', 'product.vendor'])
-            ->where('expo_products.vendor_id', $vendorId);
+            ->where('expo_products.vendor_id', $vendorId)
+            ->whereHas('product');
 
         if ((int) $expoId !== 0) {
             $query->where('expo_products.expo_id', $expoId);
